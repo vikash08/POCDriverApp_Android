@@ -16,6 +16,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.MobileServices;
 using POCDriverApp;
+// VIKASH for adding Mobile Center
+using Microsoft.Azure.Mobile;
+using Microsoft.Azure.Mobile.Analytics;
+using Microsoft.Azure.Mobile.Crashes;
+
 
 #if OFFLINE_SYNC_ENABLED
 using Microsoft.WindowsAzure.MobileServices.Sync;
@@ -52,6 +57,10 @@ namespace POCDriverApp
         protected override async void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+
+            // Vikash Sending analytics data to mobile center
+            MobileCenter.Start("8a1fe3f0-3e94-447a-87d3-58554bdf1477",
+                   typeof(Analytics), typeof(Crashes));
 
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Activity_To_Do);
