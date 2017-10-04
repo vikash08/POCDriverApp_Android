@@ -285,7 +285,7 @@ namespace POCDriverApp
         public async void AddItem(View view)
         {
 
-            Log.Debug(TAG, "InstanceID token: " + FirebaseInstanceId.Instance.Token);
+          //  Log.Debug(TAG, "InstanceID token: " + FirebaseInstanceId.Instance.Token);
 
             if (client == null || string.IsNullOrWhiteSpace(textNewToDo.Text)) {
                 return;
