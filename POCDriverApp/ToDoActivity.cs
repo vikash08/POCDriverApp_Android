@@ -171,7 +171,7 @@ namespace POCDriverApp
             }
             else
             {
-                msgText.Text = "Google Play Services is available.";
+                msgText.Text = "Google Play Services is Available.";
                 return true;
             }
         }
