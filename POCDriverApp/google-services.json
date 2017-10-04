@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "17958874798",
+    "firebase_url": "https://pocdriverappnotification.firebaseio.com",
+    "project_id": "pocdriverappnotification",
+    "storage_bucket": "pocdriverappnotification.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17958874798:android:2a439cc098680405",
+        "android_client_info": {
+          "package_name": "pocDriverApp.POCDriverApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "17958874798-u11017okk91jl93l768ski15c7d501lf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9POoo99d0r7ipPimFANHL676ObNiNewQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -21,6 +21,14 @@ using Microsoft.Azure.Mobile;
 using Microsoft.Azure.Mobile.Analytics;
 using Microsoft.Azure.Mobile.Crashes;
 
+// Vikash For Notification  (to check presence of google play service)
+using Android.Gms.Common;
+
+//Vikash notification(messageing and observe trasaction from FMS)
+using Firebase.Messaging;
+using Firebase.Iid;
+using Android.Util;
+using Gcm.Client;
 
 #if OFFLINE_SYNC_ENABLED
 using Microsoft.WindowsAzure.MobileServices.Sync;
@@ -36,7 +44,8 @@ namespace POCDriverApp
     {
         // Client reference.
         private MobileServiceClient client;
-
+        TextView msgText;
+        const string TAG = "NotificationActivity";
 #if OFFLINE_SYNC_ENABLED
         private IMobileServiceSyncTable<ToDoItem> todoTable;
 
@@ -54,9 +63,41 @@ namespace POCDriverApp
 		// URL of the mobile app backend.
         const string applicationURL = @"https://pocdriverapp.azurewebsites.net";
 
+
+        // Vikash Notification
+        // Create a new instance field for this activity.
+        static ToDoActivity instance = new ToDoActivity();
+
+        // Return the current activity instance.
+        public static ToDoActivity CurrentActivity
+        {
+            get
+            {
+                return instance;
+            }
+        }
+        // Return the Mobile Services client.
+        public MobileServiceClient CurrentClient
+        {
+            get
+            {
+                return client;
+            }
+        }
+
         protected override async void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+
+            //  Log.Debug(TAG, "google app id: " + Resource.String.google_app_id);
+
+
+            //Task.Run(() => {
+            //    var instanceid = FirebaseInstanceId.Instance;
+            //    instanceid.DeleteInstanceId();
+            //    Log.Debug("TAG", "{0} {1}", instanceid.Token, instanceid.GetToken(this.GetString(Resource.String.gcm_defaultSenderId), Firebase.Messaging.FirebaseMessaging.InstanceIdScope));
+            //});
+
 
             // Vikash Sending analytics data to mobile center
             MobileCenter.Start("8a1fe3f0-3e94-447a-87d3-58554bdf1477",
@@ -69,6 +110,19 @@ namespace POCDriverApp
 
             // Create the client instance, using the mobile app backend URL.
             client = new MobileServiceClient(applicationURL);
+
+            // Vikash Notification 
+            // Set the current instance of TodoActivity.
+            instance = this;
+
+            // Make sure the GCM client is set up correctly.
+            GcmClient.CheckDevice(this);
+            GcmClient.CheckManifest(this);
+
+            // Register the app for push notifications.
+            GcmClient.Register(this, ToDoBroadcastReceiver.senderIDs);
+            // Vikash Notification end
+
 #if OFFLINE_SYNC_ENABLED
             await InitLocalStoreAsync();
 
@@ -87,7 +141,41 @@ namespace POCDriverApp
 
             // Load the items from the mobile app backend.
             OnRefreshItemsSelected();
+            msgText = FindViewById<TextView>(Resource.Id.msgText);
+
+            if (Intent.Extras != null)
+            {
+                foreach (var key in Intent.Extras.KeySet())
+                {
+                    var value = Intent.Extras.GetString(key);
+                    Log.Debug(TAG, "Key: {0} Value: {1}", key, value);
+                }
+            }
+
+            IsPlayServicesAvailable();
         }
+
+        public bool IsPlayServicesAvailable()
+        {
+            int resultCode = GoogleApiAvailability.Instance.IsGooglePlayServicesAvailable(this);
+            if (resultCode != ConnectionResult.Success)
+            {
+                if (GoogleApiAvailability.Instance.IsUserResolvableError(resultCode))
+                    msgText.Text = GoogleApiAvailability.Instance.GetErrorString(resultCode);
+                else
+                {
+                    msgText.Text = "This device is not supported";
+                    Finish();
+                }
+                return false;
+            }
+            else
+            {
+                msgText.Text = "Google Play Services is available.";
+                return true;
+            }
+        }
+
 
 #if OFFLINE_SYNC_ENABLED
         private async Task InitLocalStoreAsync()
@@ -196,6 +284,9 @@ namespace POCDriverApp
         [Java.Interop.Export()]
         public async void AddItem(View view)
         {
+
+            Log.Debug(TAG, "InstanceID token: " + FirebaseInstanceId.Instance.Token);
+
             if (client == null || string.IsNullOrWhiteSpace(textNewToDo.Text)) {
                 return;
             }
