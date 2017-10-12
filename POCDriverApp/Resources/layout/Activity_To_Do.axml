@@ -60,4 +60,11 @@
       android:layout_height="wrap_content"
       tools:listitem="@layout/row_list_to_do"
       android:padding="6dip" />
+
+ <Button
+        android:id="@+id/buttonPickUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="PickUpItem"
+        android:text="Pick Up" />
 </LinearLayout>

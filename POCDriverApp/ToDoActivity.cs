@@ -5,7 +5,7 @@
  *
  * For more information, see: http://go.microsoft.com/fwlink/?LinkId=717898
  */
-//#define OFFLINE_SYNC_ENABLED
+#define OFFLINE_SYNC_ENABLED
 
 using System;
 using Android.OS;
@@ -21,14 +21,18 @@ using Microsoft.Azure.Mobile;
 using Microsoft.Azure.Mobile.Analytics;
 using Microsoft.Azure.Mobile.Crashes;
 
+using V7Toolbar = Android.Support.V7.Widget.Toolbar;
+
+
 // Vikash For Notification  (to check presence of google play service)
-using Android.Gms.Common;
+//using Android.Gms.Common;
 
 //Vikash notification(messageing and observe trasaction from FMS)
-using Firebase.Messaging;
-using Firebase.Iid;
+//using Firebase.Messaging;
+//using Firebase.Iid;
 using Android.Util;
 using Gcm.Client;
+using Android.Content;
 
 #if OFFLINE_SYNC_ENABLED
 using Microsoft.WindowsAzure.MobileServices.Sync;
@@ -37,10 +41,10 @@ using Microsoft.WindowsAzure.MobileServices.SQLiteStore;
 
 namespace POCDriverApp
 {
-    [Activity(MainLauncher = true,
+    [Activity(MainLauncher = false,
                Icon = "@drawable/ic_launcher", Label = "@string/app_name",
-               Theme = "@style/AppTheme")]
-    public class ToDoActivity : Activity
+               Theme = "@style/Theme.DesignDemo")]
+    public class ToDoActivity : BaseActivity
     {
         // Client reference.
         private MobileServiceClient client;
@@ -64,6 +68,9 @@ namespace POCDriverApp
         const string applicationURL = @"https://pocdriverapp.azurewebsites.net";
 
 
+        // Define a authenticated user.
+        private MobileServiceUser user;
+
         // Vikash Notification
         // Create a new instance field for this activity.
         static ToDoActivity instance = new ToDoActivity();
@@ -85,6 +92,9 @@ namespace POCDriverApp
             }
         }
 
+
+
+
         protected override async void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -100,11 +110,18 @@ namespace POCDriverApp
 
 
             // Vikash Sending analytics data to mobile center
-            MobileCenter.Start("8a1fe3f0-3e94-447a-87d3-58554bdf1477",
-                   typeof(Analytics), typeof(Crashes));
+            //MobileCenter.Start("8a1fe3f0-3e94-447a-87d3-58554bdf1477",
+            //       typeof(Analytics), typeof(Crashes));
 
             // Set our view from the "main" layout resource
-            SetContentView(Resource.Layout.Activity_To_Do);
+            //SetContentView(Resource.Layout.Activity_To_Do);
+
+            var toolbar = FindViewById<V7Toolbar>(Resource.Id.toolbar);
+           // SetSupportActionBar(toolbar);
+            //FrameLayout contentFrameLayout = (FrameLayout)FindViewById(Resource.Layout.); //Remember this is the FrameLayout area within your activity_main.xml
+            LayoutInflater inflater = (LayoutInflater)this.GetSystemService(Context.LayoutInflaterService);
+            inflater.Inflate(Resource.Layout.Activity_To_Do, toolbar);
+
 
             CurrentPlatform.Init();
 
@@ -131,7 +148,7 @@ namespace POCDriverApp
 #else
             todoTable = client.GetTable<ToDoItem>();
 #endif
-
+        
             textNewToDo = FindViewById<EditText>(Resource.Id.textNewToDo);
 
             // Create an adapter to bind the items with the view
@@ -152,29 +169,29 @@ namespace POCDriverApp
                 }
             }
 
-            IsPlayServicesAvailable();
+          //  IsPlayServicesAvailable();
         }
 
-        public bool IsPlayServicesAvailable()
-        {
-            int resultCode = GoogleApiAvailability.Instance.IsGooglePlayServicesAvailable(this);
-            if (resultCode != ConnectionResult.Success)
-            {
-                if (GoogleApiAvailability.Instance.IsUserResolvableError(resultCode))
-                    msgText.Text = GoogleApiAvailability.Instance.GetErrorString(resultCode);
-                else
-                {
-                    msgText.Text = "This device is not supported";
-                    Finish();
-                }
-                return false;
-            }
-            else
-            {
-                msgText.Text = "Google Play Services is Available.";
-                return true;
-            }
-        }
+        //public bool IsPlayServicesAvailable()
+        //{
+        //    int resultCode = GoogleApiAvailability.Instance.IsGooglePlayServicesAvailable(this);
+        //    if (resultCode != ConnectionResult.Success)
+        //    {
+        //        if (GoogleApiAvailability.Instance.IsUserResolvableError(resultCode))
+        //            msgText.Text = GoogleApiAvailability.Instance.GetErrorString(resultCode);
+        //        else
+        //        {
+        //            msgText.Text = "This device is not supported";
+        //            Finish();
+        //        }
+        //        return false;
+        //    }
+        //    else
+        //    {
+        //        msgText.Text = "Google Play Services is Available.";
+        //        return true;
+        //    }
+        //}
 
 
 #if OFFLINE_SYNC_ENABLED
@@ -211,7 +228,7 @@ namespace POCDriverApp
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
             MenuInflater.Inflate(Resource.Menu.activity_main, menu);
-            return true;
+            return false;
         }
 
         //Select an option from the menu
@@ -282,6 +299,15 @@ namespace POCDriverApp
         }
 
         [Java.Interop.Export()]
+        public  void PickUpItem(View view)
+        {
+
+            var activity2 = new Intent(this, typeof(ScanActivity));
+            activity2.PutExtra("MyData", "Data from Activity1");
+            StartActivity(activity2);
+
+        }
+        [Java.Interop.Export()]
         public async void AddItem(View view)
         {
 
@@ -315,6 +341,41 @@ namespace POCDriverApp
 
             textNewToDo.Text = "";
         }
+
+
+
+        //private async Task<bool> Authenticate()
+        //{
+        //    var success = false;
+        //    try
+        //    {
+        //        // Sign in with Facebook login using a server-managed flow.
+        //        user = await client.LoginAsync(this,MobileServiceAuthenticationProvider.Facebook);
+        //        CreateAndShowDialog(string.Format("you are now logged in - {0}",
+        //            user.UserId), "Logged in!");
+
+        //        success = true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        CreateAndShowDialog(ex, "Authentication failed");
+        //    }
+        //    return success;
+        //}
+
+        //[Java.Interop.Export()]
+        //public async void LoginUser(View view)
+        //{
+        //    // Load data only after authentication succeeds.
+        //    if (await Authenticate())
+        //    {
+        //        //Hide the button after authentication succeeds.
+        //        FindViewById<Button>(Resource.Id.buttonLoginUser).Visibility = ViewStates.Gone;
+
+        //        // Load the data.
+        //        OnRefreshItemsSelected();
+        //    }
+        //}
 
         private void CreateAndShowDialog(Exception exception, String title)
         {

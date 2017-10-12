@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+     android:layout_marginTop="40dp"
+      android:padding="6dip"
+      android:orientation="horizontal">
+    <FrameLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content">
+      <ImageButton
+      android:id="@+id/imageButton"
+       android:scaleType="fitCenter"
+      android:layout_width="80dp"
+      android:layout_height="80dp"
+      android:layout_marginBottom="50dp"
+      android:layout_marginLeft="20dp"
+      android:padding="15dip"
+      android:src="@drawable/operationlist"
+   />
+      <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_gravity="bottom"  
+       android:layout_marginLeft="20dp"
+       android:clickable="false"
+       android:textColor="#2196F3"
+       android:text="Operation List"/>
+
+    </FrameLayout>
+    <FrameLayout android:layout_width="wrap_content"
+      android:layout_height="wrap_content">
+      <ImageButton
+      android:id="@+id/imageButton2"
+      android:layout_width="80dp"
+      android:layout_height="80dp"
+      android:padding="15dip"
+      android:src="@drawable/pickup"
+      android:layout_marginBottom="50dp"
+      android:scaleType="fitCenter"
+      android:layout_marginLeft="20dp" />
+      <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="bottom"
+      android:layout_marginLeft="20dp"
+      android:clickable="false"
+      android:textColor="#2196F3"
+      android:text="Pick Up"/>
+
+    </FrameLayout>
+
+  </LinearLayout>
+  <LinearLayout
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+
+     android:padding="6dip"
+     android:orientation="horizontal">
+    <FrameLayout android:layout_width="wrap_content"
+      android:layout_height="wrap_content">
+      <ImageButton
+      android:id="@+id/imageButton3"
+      android:layout_width="80dp"
+      android:layout_height="80dp"
+      android:layout_marginBottom="50dp"
+      android:layout_marginLeft="20dp"
+      android:scaleType="fitCenter"
+      android:padding="15dip"
+      android:src="@drawable/loading"
+   />
+      <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_gravity="bottom"
+         android:clickable="false"
+         android:layout_marginLeft="20dp"
+         android:textColor="#2196F3"
+         android:text="Loading"/>
+
+    </FrameLayout>
+    <FrameLayout android:layout_width="wrap_content"
+      android:layout_height="wrap_content">
+      <ImageButton
+      android:id="@+id/imageButton4"
+      android:layout_width="80dp"
+      android:layout_height="80dp"
+      android:layout_marginBottom="50dp"
+      android:layout_marginLeft="20dp"
+      android:scaleType="fitCenter"
+      android:padding="15dip"
+      android:src="@drawable/delivery"
+      />
+      <TextView
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_gravity="bottom"
+     android:layout_marginLeft="20dp"
+     android:textColor="#2196F3"
+     android:clickable="false"
+    
+     android:text="Delivery"/>
+    </FrameLayout>
+  </LinearLayout>
+</LinearLayout>
