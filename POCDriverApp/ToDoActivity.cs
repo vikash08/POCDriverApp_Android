@@ -44,7 +44,7 @@ namespace POCDriverApp
     [Activity(MainLauncher = false,
                Icon = "@drawable/ic_launcher", Label = "@string/app_name",
                Theme = "@style/Theme.DesignDemo")]
-    public class ToDoActivity : BaseActivity
+    public class ToDoActivity : Activity
     {
         // Client reference.
         private MobileServiceClient client;
@@ -63,7 +63,8 @@ namespace POCDriverApp
 
         // EditText containing the "New ToDo" text
         private EditText textNewToDo;
-
+        private ProgressBar mProgress;
+        private ListView listViewToDo;
 		// URL of the mobile app backend.
         const string applicationURL = @"https://pocdriverapp.azurewebsites.net";
 
@@ -114,7 +115,7 @@ namespace POCDriverApp
             //       typeof(Analytics), typeof(Crashes));
 
             // Set our view from the "main" layout resource
-            //SetContentView(Resource.Layout.Activity_To_Do);
+            SetContentView(Resource.Layout.Activity_To_Do);
 
             var toolbar = FindViewById<V7Toolbar>(Resource.Id.toolbar);
            // SetSupportActionBar(toolbar);
@@ -150,10 +151,11 @@ namespace POCDriverApp
 #endif
         
             textNewToDo = FindViewById<EditText>(Resource.Id.textNewToDo);
+            mProgress = FindViewById<ProgressBar>(Resource.Id.pbar);
 
             // Create an adapter to bind the items with the view
             adapter = new ToDoItemAdapter(this, Resource.Layout.Row_List_To_Do);
-            var listViewToDo = FindViewById<ListView>(Resource.Id.listViewToDo);
+            listViewToDo = FindViewById<ListView>(Resource.Id.listViewToDo);
             listViewToDo.Adapter = adapter;
 
             // Load the items from the mobile app backend.
@@ -250,9 +252,12 @@ namespace POCDriverApp
 #if OFFLINE_SYNC_ENABLED
 			// Get changes from the mobile app backend.
             await SyncAsync(pullData: true);
+
+			listViewToDo.Visibility = ViewStates.Visible;
+            mProgress.Visibility = ViewStates.Gone;
 #endif
 			// refresh view using local store.
-            await RefreshItemsFromTableAsync();
+			await RefreshItemsFromTableAsync();
         }
 
         //Refresh the list with the items in the local store.
@@ -266,10 +271,12 @@ namespace POCDriverApp
 
                 foreach (ToDoItem current in list)
                     adapter.Add(current);
-
             }
             catch (Exception e) {
                 CreateAndShowDialog(e, "Error");
+            } finally {
+				listViewToDo.Visibility = ViewStates.Visible;
+				mProgress.Visibility = ViewStates.Gone;
             }
         }
 
