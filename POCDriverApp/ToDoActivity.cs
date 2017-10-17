@@ -20,6 +20,7 @@ using POCDriverApp;
 using Microsoft.Azure.Mobile;
 using Microsoft.Azure.Mobile.Analytics;
 using Microsoft.Azure.Mobile.Crashes;
+using Android.Support.V7.App;
 
 using V7Toolbar = Android.Support.V7.Widget.Toolbar;
 
@@ -44,11 +45,10 @@ namespace POCDriverApp
     [Activity(MainLauncher = false,
                Icon = "@drawable/ic_launcher", Label = "@string/app_name",
                Theme = "@style/Theme.DesignDemo")]
-    public class ToDoActivity : Activity
+    public class ToDoActivity : AppCompatActivity
     {
         // Client reference.
         private MobileServiceClient client;
-        TextView msgText;
         const string TAG = "NotificationActivity";
 #if OFFLINE_SYNC_ENABLED
         private IMobileServiceSyncTable<ToDoItem> todoTable;
@@ -65,7 +65,7 @@ namespace POCDriverApp
         private EditText textNewToDo;
         private ProgressBar mProgress;
         private ListView listViewToDo;
-		// URL of the mobile app backend.
+        // URL of the mobile app backend.
         const string applicationURL = @"https://pocdriverapp.azurewebsites.net";
 
 
@@ -93,15 +93,11 @@ namespace POCDriverApp
             }
         }
 
-
-
-
         protected override async void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
 
             //  Log.Debug(TAG, "google app id: " + Resource.String.google_app_id);
-
 
             //Task.Run(() => {
             //    var instanceid = FirebaseInstanceId.Instance;
@@ -118,13 +114,16 @@ namespace POCDriverApp
             SetContentView(Resource.Layout.Activity_To_Do);
 
             var toolbar = FindViewById<V7Toolbar>(Resource.Id.toolbar);
-           // SetSupportActionBar(toolbar);
-            //FrameLayout contentFrameLayout = (FrameLayout)FindViewById(Resource.Layout.); //Remember this is the FrameLayout area within your activity_main.xml
-            LayoutInflater inflater = (LayoutInflater)this.GetSystemService(Context.LayoutInflaterService);
-            inflater.Inflate(Resource.Layout.Activity_To_Do, toolbar);
+            SetSupportActionBar(toolbar);
+            SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+			SupportActionBar.SetHomeButtonEnabled(true);
+			SupportActionBar.Title = "Pickup";
 
+			//FrameLayout contentFrameLayout = (FrameLayout)FindViewById(Resource.Layout.); //Remember this is the FrameLayout area within your activity_main.xml
+			//LayoutInflater inflater = (LayoutInflater)this.GetSystemService(Context.LayoutInflaterService);
+			//inflater.Inflate(Resource.Layout.Activity_To_Do, toolbar);
 
-            CurrentPlatform.Init();
+			CurrentPlatform.Init();
 
             // Create the client instance, using the mobile app backend URL.
             client = new MobileServiceClient(applicationURL);
@@ -149,7 +148,7 @@ namespace POCDriverApp
 #else
             todoTable = client.GetTable<ToDoItem>();
 #endif
-        
+
             textNewToDo = FindViewById<EditText>(Resource.Id.textNewToDo);
             mProgress = FindViewById<ProgressBar>(Resource.Id.pbar);
 
@@ -160,7 +159,6 @@ namespace POCDriverApp
 
             // Load the items from the mobile app backend.
             OnRefreshItemsSelected();
-            msgText = FindViewById<TextView>(Resource.Id.msgText);
 
             if (Intent.Extras != null)
             {
@@ -171,7 +169,7 @@ namespace POCDriverApp
                 }
             }
 
-          //  IsPlayServicesAvailable();
+            //  IsPlayServicesAvailable();
         }
 
         //public bool IsPlayServicesAvailable()
@@ -210,60 +208,71 @@ namespace POCDriverApp
 
         private async Task SyncAsync(bool pullData = false)
         {
-            try {
+            try
+            {
                 await client.SyncContext.PushAsync();
 
-                if (pullData) {
+                if (pullData)
+                {
                     await todoTable.PullAsync("allTodoItems", todoTable.CreateQuery()); // query ID is used for incremental sync
                 }
             }
-            catch (Java.Net.MalformedURLException) {
+            catch (Java.Net.MalformedURLException)
+            {
                 CreateAndShowDialog(new Exception("There was an error creating the Mobile Service. Verify the URL"), "Error");
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 CreateAndShowDialog(e, "Error");
             }
         }
 #endif
 
         //Initializes the activity menu
-        public override bool OnCreateOptionsMenu(IMenu menu)
-        {
-            MenuInflater.Inflate(Resource.Menu.activity_main, menu);
-            return false;
-        }
+        //public override bool OnCreateOptionsMenu(IMenu menu)
+        //{
+        //    MenuInflater.Inflate(Resource.Menu.activity_main, menu);
+        //    return false;
+        //}
 
         //Select an option from the menu
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            if (item.ItemId == Resource.Id.menu_refresh) {
+			if (item.ItemId == Resource.Id.menu_refresh)
+            {
                 item.SetEnabled(false);
 
                 OnRefreshItemsSelected();
 
                 item.SetEnabled(true);
             }
-            return true;
+            else if (item.ItemId == Android.Resource.Id.Home)
+            {
+                OnBackPressed();
+            }
+
+            return base.OnOptionsItemSelected(item);
         }
 
         // Called when the refresh menu option is selected.
         private async void OnRefreshItemsSelected()
         {
 #if OFFLINE_SYNC_ENABLED
-			// Get changes from the mobile app backend.
+            // Get changes from the mobile app backend.
             await SyncAsync(pullData: true);
 
-			listViewToDo.Visibility = ViewStates.Visible;
+            listViewToDo.Visibility = ViewStates.Visible;
             mProgress.Visibility = ViewStates.Gone;
 #endif
-			// refresh view using local store.
-			await RefreshItemsFromTableAsync();
+            // refresh view using local store.
+            await RefreshItemsFromTableAsync();
         }
 
         //Refresh the list with the items in the local store.
         private async Task RefreshItemsFromTableAsync()
         {
-            try {
+            try
+            {
                 // Get the items that weren't marked as completed and add them in the adapter
                 var list = await todoTable.Where(item => item.Complete == false).ToListAsync();
 
@@ -272,41 +281,47 @@ namespace POCDriverApp
                 foreach (ToDoItem current in list)
                     adapter.Add(current);
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 CreateAndShowDialog(e, "Error");
-            } finally {
-				listViewToDo.Visibility = ViewStates.Visible;
-				mProgress.Visibility = ViewStates.Gone;
+            }
+            finally
+            {
+                listViewToDo.Visibility = ViewStates.Visible;
+                mProgress.Visibility = ViewStates.Gone;
             }
         }
 
         public async Task CheckItem(ToDoItem item)
         {
-            if (client == null) {
+            if (client == null)
+            {
                 return;
             }
 
             // Set the item as completed and update it in the table
             item.Complete = true;
-            try {
-				// Update the new item in the local store.
+            try
+            {
+                // Update the new item in the local store.
                 await todoTable.UpdateAsync(item);
 #if OFFLINE_SYNC_ENABLED
                 // Send changes to the mobile app backend.
-				await SyncAsync();
+                await SyncAsync();
 #endif
 
                 if (item.Complete)
                     adapter.Remove(item);
 
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 CreateAndShowDialog(e, "Error");
             }
         }
 
         [Java.Interop.Export()]
-        public  void PickUpItem(View view)
+        public void PickUpItem(View view)
         {
 
             var activity2 = new Intent(this, typeof(ScanActivity));
@@ -318,31 +333,36 @@ namespace POCDriverApp
         public async void AddItem(View view)
         {
 
-          //  Log.Debug(TAG, "InstanceID token: " + FirebaseInstanceId.Instance.Token);
+            //  Log.Debug(TAG, "InstanceID token: " + FirebaseInstanceId.Instance.Token);
 
-            if (client == null || string.IsNullOrWhiteSpace(textNewToDo.Text)) {
+            if (client == null || string.IsNullOrWhiteSpace(textNewToDo.Text))
+            {
                 return;
             }
 
             // Create a new item
-            var item = new ToDoItem {
+            var item = new ToDoItem
+            {
                 Text = textNewToDo.Text,
                 Complete = false
             };
 
-            try {
-				// Insert the new item into the local store.
+            try
+            {
+                // Insert the new item into the local store.
                 await todoTable.InsertAsync(item);
 #if OFFLINE_SYNC_ENABLED
                 // Send changes to the mobile app backend.
-				await SyncAsync();
+                await SyncAsync();
 #endif
 
-                if (!item.Complete) {
+                if (!item.Complete)
+                {
                     adapter.Add(item);
                 }
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 CreateAndShowDialog(e, "Error");
             }
 
@@ -391,7 +411,7 @@ namespace POCDriverApp
 
         private void CreateAndShowDialog(string message, string title)
         {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            Android.App.AlertDialog.Builder builder = new Android.App.AlertDialog.Builder(this);
 
             builder.SetMessage(message);
             builder.SetTitle(title);

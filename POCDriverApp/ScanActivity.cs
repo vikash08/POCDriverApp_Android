@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
@@ -12,49 +11,43 @@ using Android.Widget;
 using ZXing.Mobile;
 using V7Toolbar = Android.Support.V7.Widget.Toolbar;
 using Android.Support.V7.App;
+using Android.Support.V4.App;
 namespace POCDriverApp
 {
-    [Activity(MainLauncher = false,
-                Icon = "@drawable/ic_launcher", Label = "@string/app_name",
-                Theme = "@style/Theme.DesignDemo")]
-    public class ScanActivity : BaseActivity
+    public class ScanActivity : Fragment
     {
-
         // EditText containing the "New ToDo" text
         private EditText textNewToDo;
+        private Button scanItem;
 
-        protected override void OnCreate(Bundle savedInstanceState)
+        public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Android.OS.Bundle savedInstanceState)
         {
-            base.OnCreate(savedInstanceState);
+            var view = inflater.Inflate(Resource.Layout.Activity_PickUp, null);
 
-           // SetContentView(Resource.Layout.Activity_PickUp);
-            var toolbar = FindViewById<V7Toolbar>(Resource.Id.toolbar);
-            // SetSupportActionBar(toolbar);
-            //FrameLayout contentFrameLayout = (FrameLayout)FindViewById(Resource.Layout.); //Remember this is the FrameLayout area within your activity_main.xml
-            LayoutInflater inflater = (LayoutInflater)this.GetSystemService(Context.LayoutInflaterService);
-            inflater.Inflate(Resource.Layout.Activity_PickUp, toolbar);
+            MobileBarcodeScanner.Initialize(this.Activity.Application);
 
-            // Create your application here
-            MobileBarcodeScanner.Initialize(Application);
+            textNewToDo = view.FindViewById<EditText>(Resource.Id.textNewToDo);
+			scanItem = view.FindViewById<Button>(Resource.Id.buttonscanItem);
 
-           
+			scanItem.Click += (sender, args) =>
+			{
+                ScanItem();
+			};
+
+			return view;
         }
 
         [Java.Interop.Export()]
-        public async void ScanItem(View view)
+        public async void ScanItem()
         {
-
             var scanner = new ZXing.Mobile.MobileBarcodeScanner();
             var result = await scanner.Scan();
 
             if (result != null)
-            { 
-                textNewToDo = FindViewById<EditText>(Resource.Id.textNewToDo);
+            {
                 textNewToDo.Text = result.Text;
             }
             // Console.WriteLine("Scanned Barcode: " + result.Text);
-
         }
-
     }
 }

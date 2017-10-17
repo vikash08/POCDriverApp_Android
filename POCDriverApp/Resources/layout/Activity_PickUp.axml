@@ -1,27 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:background="#fff"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="#71BCFA"
-      android:padding="6dip">
-    <EditText
-         android:id="@+id/textNewToDo"
-         android:layout_width="0dip"
-         android:layout_height="wrap_content"
-         android:layout_weight="1"
-         android:ems="10"
-         android:hint="@string/add_textbox_hint">
-      <requestFocus />
-    </EditText>
-  </LinearLayout>
-  <Button
-         android:id="@+id/buttonscanItem"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:onClick="ScanItem"
-         android:text="Scan Item" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="38dp"
+        android:layout_marginRight="38dp"
+        android:background="@drawable/back_rectangle_white"
+        android:orientation="horizontal"
+        android:weightSum="100">
+        <EditText
+            android:id="@+id/textNewToDo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="100"
+            android:background="@null"
+            android:hint="Input item"
+            android:inputType="text"
+            android:padding="4dp"
+            android:textColor="#000"
+            android:textSize="14dp">
+            <requestFocus />
+        </EditText>
+    </LinearLayout>
+    <Button
+        android:id="@+id/buttonscanItem"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="38dp"
+        android:layout_marginRight="38dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/back_button_round_primary"
+        android:text="Scan Item"
+        android:textColor="#ffff" />
 </LinearLayout>

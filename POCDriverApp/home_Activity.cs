@@ -3,42 +3,69 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using V7Toolbar = Android.Support.V7.Widget.Toolbar;
-using Android.Support.V7.App;
-using Android.Support.V4.Widget;
+using Android.Support.V4.App;
 using Android.Support.Design.Widget;
 
 namespace POCDriverApp
 {
-
-    [Activity(MainLauncher = false,
-               Icon = "@drawable/ic_launcher", Label = "@string/app_name",
-               Theme = "@style/Theme.DesignDemo")]
-    public class home_Activity : BaseActivity
+    public class home_Activity : Fragment
     {
-        protected override void OnCreate(Bundle savedInstanceState)
+        public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Android.OS.Bundle savedInstanceState)
         {
-            base.OnCreate(savedInstanceState);
-            // SetContentView(Resource.Layout.home_layout);
+            var view = inflater.Inflate(Resource.Layout.home_layout, null);
 
-            var toolbar = FindViewById<V7Toolbar>(Resource.Id.toolbar);
+            var img = view.FindViewById<ImageButton>(Resource.Id.imageButton);
+            var img2 = view.FindViewById<ImageButton>(Resource.Id.imageButton2);
+            var img3 = view.FindViewById<ImageButton>(Resource.Id.imageButton3);
+            var img4 = view.FindViewById<ImageButton>(Resource.Id.imageButton4);
 
-            //NavigationView navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
-            //navigationView.get().getItem(0).setChecked(true);
+            img2.Click += delegate
+            {
+                var activitypickup = new Intent(this.Activity, typeof(ToDoActivity));
+                activitypickup.PutExtra("MyData", "Data from Activity1");
+                StartActivity(activitypickup);
+            };
 
-            //FrameLayout contentFrameLayout = (FrameLayout)FindViewById(Resource.Layout.); //Remember this is the FrameLayout area within your activity_main.xml
-            LayoutInflater inflater = (LayoutInflater)this.GetSystemService(Context.LayoutInflaterService);
-            inflater.Inflate(Resource.Layout.home_layout, toolbar);
-        
+            img.Click += delegate
+            {
+				MainActivity opList = new MainActivity();
 
-        // Create your application here
+				this.Activity.SupportFragmentManager.BeginTransaction()
+				.Replace(Resource.Id.fragment_container, opList)
+				.Commit();
+
+				((BaseActivity) this.Activity).updateDrawer(1, "Operation List");
+			};
+
+			img3.Click += delegate
+			{
+				ScanActivity scan2 = new ScanActivity();
+
+				this.Activity.SupportFragmentManager.BeginTransaction()
+				.Replace(Resource.Id.fragment_container, scan2)
+				.Commit();
+
+				((BaseActivity)this.Activity).updateDrawer(4, "Loading");
+			};
+
+			img4.Click += delegate
+			{
+				ScanActivity scan2 = new ScanActivity();
+
+				this.Activity.SupportFragmentManager.BeginTransaction()
+				.Replace(Resource.Id.fragment_container, scan2)
+				.Commit();
+
+				((BaseActivity)this.Activity).updateDrawer(3, "Delivery");
+			};
+
+			return view;
+        }
     }
-
-     }
 }

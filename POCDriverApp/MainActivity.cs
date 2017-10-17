@@ -3,53 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using V7Toolbar = Android.Support.V7.Widget.Toolbar;
 using Android.Support.V7.App;
+using Android.Support.V4.App;
 using Android.Support.V4.Widget;
 using Android.Graphics;
 
 namespace POCDriverApp
 {
-    [Activity(MainLauncher = false,
-               Icon = "@drawable/ic_launcher", Label = "@string/app_name",
-               Theme = "@style/Theme.DesignDemo")]
-    public class MainActivity : BaseActivity
+    public class MainActivity : Fragment
     {
-		List<string> items;
+        List<string> items;
 
+        public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Android.OS.Bundle savedInstanceState)
+        {
+            var view = inflater.Inflate(Resource.Layout.DragDrop_Activity, null);
 
-		protected override void OnCreate (Bundle bundle)
-		{
-			base.OnCreate (bundle);
+            var list = view.FindViewById<DraggableListView>(Resource.Id.listView1);
 
-			// Set our view from the "main" layout resource
-			// Set our view from the "main" layout resource
-			//SetContentView (Resource.Layout.DragDrop_Activity);
-
-            var toolbar = FindViewById<V7Toolbar>(Resource.Id.toolbar);
-            // SetSupportActionBar(toolbar);
-            //FrameLayout contentFrameLayout = (FrameLayout)FindViewById(Resource.Layout.); //Remember this is the FrameLayout area within your activity_main.xml
-            LayoutInflater inflater = (LayoutInflater)this.GetSystemService(Context.LayoutInflaterService);
-            inflater.Inflate(Resource.Layout.DragDrop_Activity, toolbar);
-
-            var list = FindViewById<DraggableListView> (Resource.Id.listView1);
-
-
-			items = new List<string> {
-				"Pick Up At PGO",
-				"Loading At PGO",
-				"Delivery At Oslo Terminal",
-				"Pick Up At National Theatre",
-				"Delivery At Storo ",
-				"Unloading At Bergen",
-				"Loading At Bergen",
-				"Delivery in Bergen",
+            items = new List<string> {
+                "Pick Up At PGO",
+                "Loading At PGO",
+                "Delivery At Oslo Terminal",
+                "Pick Up At National Theatre",
+                "Delivery At Storo ",
+                "Unloading At Bergen",
+                "Loading At Bergen",
+                "Delivery in Bergen",
                 "Pick Up At Tromso",
                 "Loading At Tromso",
                 "Delivery At Oslo Central",
@@ -59,73 +43,78 @@ namespace POCDriverApp
                 "Loading At Sandvika",
                 "Delivery in Lorenskog",
             };
-			list.Adapter = new DraggableListAdapter (this, items);
-		}
-	}
+            list.Adapter = new DraggableListAdapter((Android.App.Activity) this.Activity, items);
 
-	public class DraggableListAdapter : BaseAdapter, IDraggableListAdapter
-	{
-		public List<string> Items { get; set; }
+            return view;
 
+        }
+    }
 
-		public int mMobileCellPosition { get; set; }
+    public class DraggableListAdapter : BaseAdapter, IDraggableListAdapter
+    {
+        public List<string> Items { get; set; }
 
-		Activity context;
+        public int mMobileCellPosition { get; set; }
 
-		public DraggableListAdapter (Activity context, List<string> items) : base ()
-		{
-			Items = items;
-			this.context = context;
-			mMobileCellPosition = int.MinValue;
-		}
+        Android.App.Activity context;
 
-		public override Java.Lang.Object GetItem (int position)
-		{
-			return Items [position];
-		}
+        public DraggableListAdapter(Android.App.Activity context, List<string> items) : base()
+        {
+            Items = items;
+            this.context = context;
+            mMobileCellPosition = int.MinValue;
+        }
 
-		public override long GetItemId (int position)
-		{
-			return position;
-		}
+        public override Java.Lang.Object GetItem(int position)
+        {
+            return Items[position];
+        }
 
-		public override View GetView (int position, View convertView, ViewGroup parent)
-		{
-			View cell = convertView;
-			if (cell == null) {
-				cell = context.LayoutInflater.Inflate (Android.Resource.Layout.SimpleListItem1, parent, false);
-				cell.SetMinimumHeight (150);
-				cell.SetBackgroundColor (Color.WhiteSmoke);
-                
-			}
+        public override long GetItemId(int position)
+        {
+            return position;
+        }
 
-			var text = cell.FindViewById<TextView> (Android.Resource.Id.Text1);
-			if (text != null) {
-				text.Text = position.ToString () + "  "+ GetItem(position);
-			}
+        public override View GetView(int position, View convertView, ViewGroup parent)
+        {
+            View cell = convertView;
+            if (cell == null)
+            {
+                cell = context.LayoutInflater.Inflate(Android.Resource.Layout.SimpleListItem1, parent, false);
+                cell.SetMinimumHeight(150);
+                cell.SetBackgroundColor(Color.WhiteSmoke);
 
-			cell.Visibility = mMobileCellPosition == position ? ViewStates.Invisible : ViewStates.Visible;
-			cell.TranslationY = 0;
+            }
 
-			return cell;
-		}
+            var text = cell.FindViewById<TextView>(Android.Resource.Id.Text1);
+            if (text != null)
+            {
+                text.Text = position.ToString() + "  " + GetItem(position);
+            }
 
-		public override int Count {
-			get {
-				return Items.Count;
-			}
-		}
+            cell.Visibility = mMobileCellPosition == position ? ViewStates.Invisible : ViewStates.Visible;
+            cell.TranslationY = 0;
 
-		public void SwapItems (int indexOne, int indexTwo)
-		{
-			var oldValue = Items [indexOne];
-			Items [indexOne] = Items [indexTwo];
-			Items [indexTwo] = oldValue;
-			mMobileCellPosition = indexTwo;
-			NotifyDataSetChanged ();
-		}
-			
-	}
+            return cell;
+        }
+
+        public override int Count
+        {
+            get
+            {
+                return Items.Count;
+            }
+        }
+
+        public void SwapItems(int indexOne, int indexTwo)
+        {
+            var oldValue = Items[indexOne];
+            Items[indexOne] = Items[indexTwo];
+            Items[indexTwo] = oldValue;
+            mMobileCellPosition = indexTwo;
+            NotifyDataSetChanged();
+        }
+    }
 }
 
 

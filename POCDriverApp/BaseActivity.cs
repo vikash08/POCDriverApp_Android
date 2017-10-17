@@ -21,81 +21,97 @@ namespace POCDriverApp
     {
         DrawerLayout drawerLayout;
         NavigationView navigationView;
+
         //[Java.Interop.Export()]
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.NavigationLayoutaxml);
             var toolbar = FindViewById<V7Toolbar>(Resource.Id.toolbar);
+
             SetSupportActionBar(toolbar);
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
-            SupportActionBar.SetDisplayShowTitleEnabled(false);
+            SupportActionBar.SetDisplayShowTitleEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
-            SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.ic_launcher);
-
-            //this.ActionBar.SetDisplayHomeAsUpEnabled(true);
-            //this.ActionBar.SetHomeButtonEnabled(true);
 
             drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
+            var toggle = new ActionBarDrawerToggle(
+                    this, drawerLayout, toolbar, Resource.String.drawer_open,
+                                                      Resource.String.drawer_close);
+            toggle.SyncState();
+
             navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
             navigationView.NavigationItemSelected += NavigationView_NavigationItemSelected;
-            //navigationView.NavigationItemSelected += (sender, e) =>
-            //{
-            //    e.MenuItem.SetChecked(true);
-            //    //react to click here and swap fragments or navigate
 
+            home_Activity home = new home_Activity();
 
-            //    drawerLayout.CloseDrawers();
-            //};
+            SupportActionBar.Title = "Home";
 
-        }
+            SupportFragmentManager.BeginTransaction()
+            .Replace(Resource.Id.fragment_container, home)
+            .Commit();
 
-
+			navigationView.Menu.GetItem(0).SetChecked(true);
+		}
 
         public void NavigationView_NavigationItemSelected(object sender, NavigationView.NavigationItemSelectedEventArgs e)
         {
             e.MenuItem.SetChecked(true);
-           
+
             switch (e.MenuItem.ItemId)
             {
                 case (Resource.Id.nav_Home):
-                    // React on 'Home' selection
-                    // ...
-                    var activity2 = new Intent(this, typeof(home_Activity));
-                    activity2.PutExtra("MyData", "Data from Activity1");
-                    StartActivity(activity2);
+                    home_Activity home = new home_Activity();
+
+                    SupportActionBar.Title = "Home";
+
+                    SupportFragmentManager.BeginTransaction()
+                    .Replace(Resource.Id.fragment_container, home)
+                    .Commit();
+
                     break;
-                case (Resource.Id.nav_delivery):
-                    // React on 'Home' selection
-                    // ...
-                    var activitydelivery = new Intent(this, typeof(ScanActivity));
-                    activitydelivery.PutExtra("MyData", "Data from Activity1");
-                    StartActivity(activitydelivery);
-                    break;
+
                 case (Resource.Id.nav_OperList):
-                    // React on 'Home' selection
-                    // ...
-                    var activityOL = new Intent(this, typeof(MainActivity));
-                    activityOL.PutExtra("MyData", "Data from Activity1");
-                    StartActivity(activityOL);
+                    MainActivity opList = new MainActivity();
+
+                    SupportActionBar.Title = "Operation List";
+
+                    SupportFragmentManager.BeginTransaction()
+                    .Replace(Resource.Id.fragment_container, opList)
+                    .Commit();
+
                     break;
-                case (Resource.Id.nav_pickUp):
-                    // React on 'Home' selection
-                    // ...
-                    var activitypickup = new Intent(this, typeof(ToDoActivity));
-                    activitypickup.PutExtra("MyData", "Data from Activity1");
-                    StartActivity(activitypickup);
+
+				case (Resource.Id.nav_pickUp):
+					var activitypickup = new Intent(this, typeof(ToDoActivity));
+					activitypickup.PutExtra("MyData", "Data from Activity1");
+					StartActivity(activitypickup);
+					break;
+
+                case (Resource.Id.nav_delivery):
+					ScanActivity scan1 = new ScanActivity();
+
+					SupportActionBar.Title = "Delivery";
+
+					SupportFragmentManager.BeginTransaction()
+					.Replace(Resource.Id.fragment_container, scan1)
+					.Commit();
+
                     break;
+                
                 case (Resource.Id.nav_loading):
-                    // React on 'Home' selection
-                    // ...
-                    var activityLoading = new Intent(this, typeof(ScanActivity));
-                    activityLoading.PutExtra("MyData", "Data from Activity1");
-                    StartActivity(activityLoading);
+					ScanActivity scan2 = new ScanActivity();
+
+					SupportActionBar.Title = "Loading";
+
+					SupportFragmentManager.BeginTransaction()
+					.Replace(Resource.Id.fragment_container, scan2)
+					.Commit();
+
                     break;
             }
+
             e.MenuItem.SetChecked(true);
-            // Close drawer
             drawerLayout.CloseDrawers();
         }
 
@@ -113,28 +129,28 @@ namespace POCDriverApp
         //            break;
         //    }
 
-            //    // Close drawer
-            //    drawerLayout.CloseDrawers();
-            //    return null;
-            //}
+        //    // Close drawer
+        //    drawerLayout.CloseDrawers();
+        //    return null;
+        //}
 
-            //[Java.Interop.Export()]
-            //public void NavigationView_NavigationItemSelected(object sender, NavigationView.NavigationItemSelectedEventArgs e)
-            //{
-            //    switch (e.MenuItem.ItemId)
-            //    {
-            //        case (Resource.Id.nav_Home):
-            //            // React on 'Home' selection
-            //            // ...
-            //            var activity2 = new Intent(this, typeof(home_Activity));
-            //            activity2.PutExtra("MyData", "Data from Activity1");
-            //            StartActivity(activity2);
-            //            break;
-            //    }
+        //[Java.Interop.Export()]
+        //public void NavigationView_NavigationItemSelected(object sender, NavigationView.NavigationItemSelectedEventArgs e)
+        //{
+        //    switch (e.MenuItem.ItemId)
+        //    {
+        //        case (Resource.Id.nav_Home):
+        //            // React on 'Home' selection
+        //            // ...
+        //            var activity2 = new Intent(this, typeof(home_Activity));
+        //            activity2.PutExtra("MyData", "Data from Activity1");
+        //            StartActivity(activity2);
+        //            break;
+        //    }
 
-            //    // Close drawer
-            //    drawerLayout.CloseDrawers();
-            //}
+        //    // Close drawer
+        //    drawerLayout.CloseDrawers();
+        //}
 
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
@@ -150,7 +166,7 @@ namespace POCDriverApp
 
             //};
 
-           return false;
+            return false;
             //return base.OnCreateOptionsMenu(menu);
         }
 
@@ -193,5 +209,10 @@ namespace POCDriverApp
             }
             return base.OnOptionsItemSelected(item);
         }
+
+        public void updateDrawer(int pos, String title) {
+			SupportActionBar.Title = title;
+			navigationView.Menu.GetItem(pos).SetChecked(true);
+		}
     }
 }
