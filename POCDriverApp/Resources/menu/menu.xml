@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <!--For all properties see: http://developer.android.com/guide/topics/resources/menu-resource.html-->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-  <group android:checkableBehavior="single">
+  <group android:checkableBehavior="single"
+      android:id="@+id/grp1">
     <item
       android:id="@+id/nav_Home"
       android:icon="@drawable/home"
@@ -23,6 +24,13 @@
       android:icon="@drawable/small_loading"
       android:title="Loading" />    
     </group >
+	<group checkableBehavior="none"
+      android:id="@+id/grp2">
+	<item
+      android:id="@+id/nav_Logout"
+      android:icon="@drawable/icon_exit"
+      android:title="Logout" />
+	</group>
 </menu>
 
 <!-- Code to implement into Activity:

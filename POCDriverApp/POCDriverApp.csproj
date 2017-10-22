@@ -201,6 +201,8 @@
     <Compile Include="ToDoActivity.cs" />
     <Compile Include="ToDoItem.cs" />
     <Compile Include="ToDoItemAdapter.cs" />
+    <Compile Include="Login.cs" />
+    <Compile Include="UserSessionManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Activity_PickUp.axml">
@@ -228,6 +230,9 @@
     <AndroidResource Include="Resources\layout\content_home_page.axml" />
     <AndroidResource Include="Resources\drawable\back_rectangle_white.xml" />
     <AndroidResource Include="Resources\drawable\back_button_round_primary.xml" />
+    <AndroidResource Include="Resources\layout\LoginLayout.axml" />
+    <AndroidResource Include="Resources\drawable\back_rectangle_white_login.xml" />
+    <AndroidResource Include="Resources\drawable\icon_exit.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />

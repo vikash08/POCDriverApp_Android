@@ -1,26 +1,24 @@
 ﻿using System;
 using Android.App;
 using Android.Views;
-using Android.Widget;
 using Android.OS;
-using System.Collections.Generic;
-using Android.Graphics;
 using Android.Content;
 using V7Toolbar = Android.Support.V7.Widget.Toolbar;
 using Android.Support.V7.App;
 using Android.Support.V4.Widget;
 using Android.Support.Design.Widget;
-
+using Java.Util;
+using Android.Widget;
 
 namespace POCDriverApp
 {
-    [Activity(MainLauncher = true,
-               Icon = "@drawable/ic_launcher", Label = "@string/app_name",
+    [Activity(Icon = "@drawable/ic_launcher", Label = "@string/app_name",
                Theme = "@style/Theme.DesignDemo")]
     public class BaseActivity : AppCompatActivity
     {
         DrawerLayout drawerLayout;
         NavigationView navigationView;
+        UserSessionManager sessionManager;
 
         //[Java.Interop.Export()]
         protected override void OnCreate(Bundle bundle)
@@ -34,6 +32,12 @@ namespace POCDriverApp
             SupportActionBar.SetDisplayShowTitleEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
 
+            sessionManager = new UserSessionManager(Application.Context);
+            HashMap user = sessionManager.getUserDetails();
+            var uuid = user.Get(UserSessionManager.TAG_uuid);
+            var email = user.Get(UserSessionManager.TAG_mail);
+            var name = user.Get(UserSessionManager.TAG_name);
+
             drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
             var toggle = new ActionBarDrawerToggle(
                     this, drawerLayout, toolbar, Resource.String.drawer_open,
@@ -43,6 +47,11 @@ namespace POCDriverApp
             navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
             navigationView.NavigationItemSelected += NavigationView_NavigationItemSelected;
 
+            View hView = navigationView.InflateHeaderView(Resource.Layout.Header);
+
+            TextView header = hView.FindViewById<TextView>(Resource.Id.headerText);
+            header.Text = name + " (" + uuid + ")";
+
             home_Activity home = new home_Activity();
 
             SupportActionBar.Title = "Home";
@@ -51,8 +60,8 @@ namespace POCDriverApp
             .Replace(Resource.Id.fragment_container, home)
             .Commit();
 
-			navigationView.Menu.GetItem(0).SetChecked(true);
-		}
+            navigationView.Menu.GetItem(0).SetChecked(true);
+        }
 
         public void NavigationView_NavigationItemSelected(object sender, NavigationView.NavigationItemSelectedEventArgs e)
         {
@@ -82,31 +91,39 @@ namespace POCDriverApp
 
                     break;
 
-				case (Resource.Id.nav_pickUp):
-					var activitypickup = new Intent(this, typeof(ToDoActivity));
-					activitypickup.PutExtra("MyData", "Data from Activity1");
-					StartActivity(activitypickup);
-					break;
+                case (Resource.Id.nav_pickUp):
+                    var activitypickup = new Intent(this, typeof(ToDoActivity));
+                    activitypickup.PutExtra("MyData", "Data from Activity1");
+                    StartActivity(activitypickup);
+                    break;
 
                 case (Resource.Id.nav_delivery):
-					ScanActivity scan1 = new ScanActivity();
+                    ScanActivity scan1 = new ScanActivity();
 
-					SupportActionBar.Title = "Delivery";
+                    SupportActionBar.Title = "Delivery";
 
-					SupportFragmentManager.BeginTransaction()
-					.Replace(Resource.Id.fragment_container, scan1)
-					.Commit();
+                    SupportFragmentManager.BeginTransaction()
+                    .Replace(Resource.Id.fragment_container, scan1)
+                    .Commit();
 
                     break;
-                
+
                 case (Resource.Id.nav_loading):
-					ScanActivity scan2 = new ScanActivity();
+                    ScanActivity scan2 = new ScanActivity();
 
-					SupportActionBar.Title = "Loading";
+                    SupportActionBar.Title = "Loading";
 
-					SupportFragmentManager.BeginTransaction()
-					.Replace(Resource.Id.fragment_container, scan2)
-					.Commit();
+                    SupportFragmentManager.BeginTransaction()
+                    .Replace(Resource.Id.fragment_container, scan2)
+                    .Commit();
+
+                    break;
+
+                case (Resource.Id.nav_Logout):
+                    sessionManager.logoutUser();
+                    var login = new Intent(this, typeof(Login));
+                    StartActivity(login);
+                    Finish();
 
                     break;
             }
@@ -172,8 +189,6 @@ namespace POCDriverApp
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-
-
             //switch (id)
             //{
             //    case R.id.nav_Home:
@@ -210,9 +225,18 @@ namespace POCDriverApp
             return base.OnOptionsItemSelected(item);
         }
 
-        public void updateDrawer(int pos, String title) {
-			SupportActionBar.Title = title;
-			navigationView.Menu.GetItem(pos).SetChecked(true);
-		}
+        public override void OnBackPressed()
+        {
+            if (drawerLayout.IsDrawerOpen(navigationView))
+                drawerLayout.CloseDrawers();
+            else
+                base.OnBackPressed();
+        }
+
+        public void updateDrawer(int pos, String title)
+        {
+            SupportActionBar.Title = title;
+            navigationView.Menu.GetItem(pos).SetChecked(true);
+        }
     }
 }
