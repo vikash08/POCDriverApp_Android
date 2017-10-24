@@ -9,7 +9,7 @@
     <item
       android:id="@+id/nav_OperList"
       android:icon="@drawable/small_operation"
-      android:title="Operation Lst" />
+      android:title="Operation List" />
     <item
       android:id="@+id/nav_pickUp"
         android:icon="@drawable/small_pickup"

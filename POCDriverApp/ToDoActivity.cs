@@ -5,7 +5,7 @@
  *
  * For more information, see: http://go.microsoft.com/fwlink/?LinkId=717898
  */
-#define OFFLINE_SYNC_ENABLED
+//#define OFFLINE_SYNC_ENABLED
 
 using System;
 using Android.OS;
@@ -66,11 +66,11 @@ namespace POCDriverApp
         private ProgressBar mProgress;
         private ListView listViewToDo;
         // URL of the mobile app backend.
-        const string applicationURL = @"https://pocdriverapp.azurewebsites.net";
-
+        //const string applicationURL = @"https://pocdriverapp.azurewebsites.net";
+        const string applicationURL = @"https://driverapptester.azurewebsites.net";
 
         // Define a authenticated user.
-        private MobileServiceUser user;
+      //  private MobileServiceUser user;
 
         // Vikash Notification
         // Create a new instance field for this activity.
@@ -132,12 +132,12 @@ namespace POCDriverApp
             // Set the current instance of TodoActivity.
             instance = this;
 
-            // Make sure the GCM client is set up correctly.
-            GcmClient.CheckDevice(this);
-            GcmClient.CheckManifest(this);
+            //// Make sure the GCM client is set up correctly.
+            //GcmClient.CheckDevice(this);
+            //GcmClient.CheckManifest(this);
 
             // Register the app for push notifications.
-            GcmClient.Register(this, ToDoBroadcastReceiver.senderIDs);
+            //GcmClient.Register(this, ToDoBroadcastReceiver.senderIDs);
             // Vikash Notification end
 
 #if OFFLINE_SYNC_ENABLED

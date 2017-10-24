@@ -11,6 +11,8 @@ using Android.Widget;
 using V7Toolbar = Android.Support.V7.Widget.Toolbar;
 using Android.Support.V4.App;
 using Android.Support.Design.Widget;
+using Android.Graphics;
+using static Android.Graphics.PorterDuff;
 
 namespace POCDriverApp
 {
@@ -20,10 +22,18 @@ namespace POCDriverApp
         {
             var view = inflater.Inflate(Resource.Layout.home_layout, null);
 
+
+            Color newColor = Color.ParseColor("#C62828");
+         
+
             var img = view.FindViewById<ImageButton>(Resource.Id.imageButton);
             var img2 = view.FindViewById<ImageButton>(Resource.Id.imageButton2);
             var img3 = view.FindViewById<ImageButton>(Resource.Id.imageButton3);
             var img4 = view.FindViewById<ImageButton>(Resource.Id.imageButton4);
+            img.SetColorFilter(newColor, Mode.SrcAtop);
+            img2.SetColorFilter(newColor, Mode.SrcAtop);
+            img3.SetColorFilter(newColor, Mode.SrcAtop);
+            img4.SetColorFilter(newColor, Mode.SrcAtop);
 
             img2.Click += delegate
             {

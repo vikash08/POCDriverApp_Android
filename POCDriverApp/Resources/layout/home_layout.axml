@@ -14,8 +14,10 @@
         android:padding="6dip"
         android:orientation="horizontal">
         <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="136.5dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/frameLayout1"
+            android:layout_marginRight="6.5dp">
             <ImageButton
                 android:id="@+id/imageButton"
                 android:scaleType="fitCenter"
@@ -29,14 +31,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_marginLeft="18dp"
+                android:layout_marginLeft="23.5dp"
                 android:clickable="false"
-                android:textColor="#2196F3"
-                android:text="Operation List" />
+                android:textColor="#212121"
+                android:text="Operation List"
+                android:id="@+id/textView1"
+                android:layout_marginRight="11.0dp"
+                android:layout_marginBottom="5.0dp" />
         </FrameLayout>
         <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3.5dp">
             <ImageButton
                 android:id="@+id/imageButton2"
                 android:layout_width="80dp"
@@ -52,8 +58,9 @@
                 android:layout_gravity="bottom"
                 android:layout_marginLeft="35dp"
                 android:clickable="false"
-                android:textColor="#2196F3"
-                android:text="Pick Up" />
+                android:textColor="#212121"
+                android:text="Pick Up"
+                android:layout_marginBottom="3.5dp" />
         </FrameLayout>
     </LinearLayout>
     <LinearLayout
@@ -63,8 +70,9 @@
         android:padding="6dip"
         android:orientation="horizontal">
         <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="134.5dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="6.5dp">
             <ImageButton
                 android:id="@+id/imageButton3"
                 android:layout_width="80dp"
@@ -80,12 +88,14 @@
                 android:layout_gravity="bottom"
                 android:clickable="false"
                 android:layout_marginLeft="35dp"
-                android:textColor="#2196F3"
-                android:text="Loading" />
+                android:textColor="#212121"
+                android:text="Loading"
+                android:layout_marginBottom="1.5dp" />
         </FrameLayout>
         <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2.5dp">
             <ImageButton
                 android:id="@+id/imageButton4"
                 android:layout_width="80dp"
@@ -100,9 +110,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginLeft="35dp"
-                android:textColor="#2196F3"
+                android:textColor="#212121"
                 android:clickable="false"
-                android:text="Delivery" />
+                android:text="Delivery"
+                android:layout_marginBottom="2.0dp" />
         </FrameLayout>
     </LinearLayout>
 </LinearLayout>
