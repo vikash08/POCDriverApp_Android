@@ -35,7 +35,7 @@ namespace POCDriverApp
     public class ToDoBroadcastReceiver : GcmBroadcastReceiverBase<PushHandlerService>
     {
         // Set the Google app ID.
-        public static string[] senderIDs = new string[] { "17958874798" };
+        public static string[] senderIDs = new string[] { "605750339794" };
     }
 
     // The ServiceAttribute must be applied to the class.
@@ -51,7 +51,7 @@ namespace POCDriverApp
             System.Diagnostics.Debug.WriteLine("The device has been registered with GCM.", "Success!");
 
             // Get the MobileServiceClient from the current activity instance.
-            MobileServiceClient client = ToDoActivity.CurrentActivity.CurrentClient;
+            MobileServiceClient client = BaseActivity.CurrentActivity.CurrentClient;
             var push = client.GetPush();
 
             // Define a message body for GCM.
@@ -92,7 +92,7 @@ namespace POCDriverApp
             if (intent.Extras.ContainsKey("message"))
             {
                 message = intent.Extras.Get("message").ToString();
-                var title = "New item added:";
+                var title = "New Operation Received";
 
                 // Create a notification manager to send the notification.
                 var notificationManager =
@@ -101,7 +101,7 @@ namespace POCDriverApp
                 // Create a new intent to show the notification in the UI. 
                 PendingIntent contentIntent =
                     PendingIntent.GetActivity(context, 0,
-                    new Intent(this, typeof(ToDoActivity)), 0);
+                    new Intent(this, typeof(MainActivity)), 0);
 
                 // Create the notification using the builder.
                 var builder = new Notification.Builder(context);

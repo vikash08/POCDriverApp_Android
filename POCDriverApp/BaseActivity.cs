@@ -10,7 +10,10 @@ using V7Toolbar = Android.Support.V7.Widget.Toolbar;
 using Android.Support.V7.App;
 using Android.Support.V4.Widget;
 using Android.Support.Design.Widget;
-
+using Android.Util;
+using Gcm.Client;
+using Android.Content;
+using Microsoft.WindowsAzure.MobileServices;
 
 namespace POCDriverApp
 {
@@ -21,6 +24,31 @@ namespace POCDriverApp
     {
         DrawerLayout drawerLayout;
         NavigationView navigationView;
+
+
+        // Vikash Notification
+        const string applicationURL = @"https://driverapptester.azurewebsites.net";
+        // Create a new instance field for this activity.
+        static BaseActivity instance = new BaseActivity();
+        private MobileServiceClient client;
+
+        // Return the current activity instance.
+        public static BaseActivity CurrentActivity
+        {
+            get
+            {
+                return instance;
+            }
+        }
+        // Return the Mobile Services client.
+        public MobileServiceClient CurrentClient
+        {
+            get
+            {
+                return client;
+            }
+        }
+
 
         //[Java.Interop.Export()]
         protected override void OnCreate(Bundle bundle)
@@ -39,6 +67,13 @@ namespace POCDriverApp
                     this, drawerLayout, toolbar, Resource.String.drawer_open,
                                                       Resource.String.drawer_close);
             toggle.SyncState();
+
+            client = new MobileServiceClient(applicationURL);
+            // Vikash Notification 
+            // Set the current instance of TodoActivity.
+            instance = this;
+
+            GcmClient.Register(this, ToDoBroadcastReceiver.senderIDs);
 
             navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
             navigationView.NavigationItemSelected += NavigationView_NavigationItemSelected;

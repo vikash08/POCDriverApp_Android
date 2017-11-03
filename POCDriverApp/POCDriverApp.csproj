@@ -87,6 +87,9 @@
     <Reference Include="Microsoft.WindowsAzure.Mobile.SQLiteStore">
       <HintPath>..\packages\Microsoft.Azure.Mobile.Client.SQLiteStore.3.1.0\lib\portable-win+net45+wp8+wpa81+monotouch10+monoandroid10+xamarinios10\Microsoft.WindowsAzure.Mobile.SQLiteStore.dll</HintPath>
     </Reference>
+    <Reference Include="SignaturePad, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\meap_poc\packages\Xamarin.Controls.SignaturePad.2.2.0\lib\MonoAndroid\SignaturePad.dll</HintPath>
+    </Reference>
     <Reference Include="SQLitePCLRaw.batteries_green">
       <HintPath>..\packages\SQLitePCLRaw.bundle_green.1.1.2\lib\MonoAndroid\SQLitePCLRaw.batteries_green.dll</HintPath>
     </Reference>
@@ -190,12 +193,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseActivity.cs" />
+    <Compile Include="DAL\GoodseventsToServer.cs" />
     <Compile Include="DraggableListView.cs" />
     <Compile Include="home_Activity.cs" />
     <Compile Include="IDraggableListAdapter.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="ScanActivity.cs" />
     <Compile Include="ToDoBroadcastReceiver.cs" />
+    <Compile Include="Goodsevent.cs" />
     <Compile Include="Utility\CustomisedSnackbar.cs" />
     <Compile Include="Utility\Serializer.cs" />
     <Compile Include="Entity\OperationList.cs" />
